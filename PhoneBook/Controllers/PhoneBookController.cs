@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.Language;
+using PhoneBook.DTOs;
+using PhoneBook.Helpers;
 using PhoneBook.Models;
 using PhoneBook.Services;
 using System;
@@ -35,9 +37,13 @@ namespace PhoneBook.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] PaginationDTO pagination)
         {
-            return Ok(await _cosmosDbService.GetItemsAsync("SELECT * FROM c"));
+            var items = await _cosmosDbService.GetItemsAsync("SELECT * FROM c");
+            var queryable = items.AsQueryable();
+            await HttpContext.InsertPaginationParametersInResponse(queryable, pagination.RecordsPerPage);
+            var phonebooks = queryable.Paginate(pagination).ToList();
+            return Ok(phonebooks);
         }
 
         [HttpPost]
