@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { PhoneBook } from '../_models/phonebook';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { PhoneBookRepoService } from '../_services/phone-book-repo.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,7 +22,7 @@ export class AddphonebookComponent implements OnInit {
     ]),
   });
 
-  constructor() {
+  constructor(private repo: PhoneBookRepoService) {
     this.toggleAddPhonebook = new EventEmitter<boolean>();
   }
 
@@ -47,15 +48,24 @@ export class AddphonebookComponent implements OnInit {
         name: this.phoneBookForm.get('name').value,
         entries: null,
       };
-      this.phonebooks.push(this.phonebook);
+
+      this.repo.addPhoneBook(this.phonebook).subscribe(res => {
+        this.phonebooks.push(this.phonebook);
+        this.phonebook = null;
+        this.phoneBookForm.reset();
+      }, error => {
+        console.log(error);
+      });
     } else {
       this.phonebook.name = this.phoneBookForm.get('name').value;
-      const index = this.phonebooks.indexOf(this.phonebook);
-      if (index !== -1) {
-        this.phonebooks[index] = this.phonebook;
-      }
+      this.repo.updatePhoneBook(this.phonebook.id, this.phonebook).subscribe(next => {
+        const index = this.phonebooks.indexOf(this.phonebook);
+        if (index !== -1) {
+          this.phonebooks[index] = this.phonebook;
+        }
+      }, error => {
+        console.log(error);
+      });
     }
-    this.phonebook = null;
-    this.phoneBookForm.reset();
   }
 }

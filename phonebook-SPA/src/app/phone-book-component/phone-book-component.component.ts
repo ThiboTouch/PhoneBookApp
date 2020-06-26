@@ -73,10 +73,14 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
   }
 
   deletePhoneBook() {
-    const index = this.phonebooks.indexOf(this.phonebook);
-    if (index > -1) {
-      this.phonebooks.splice(index, 1);
-    }
-    this.confirmDelete = false;
+    this.repo.deletePhoneBook(this.phonebook.id).subscribe(next => {
+      const index = this.phonebooks.indexOf(this.phonebook);
+      if (index > -1) {
+        this.phonebooks.splice(index, 1);
+      }
+      this.confirmDelete = false;
+    }, error => {
+      console.log(error);
+    });
   }
 }

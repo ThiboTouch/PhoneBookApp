@@ -50,7 +50,7 @@ namespace PhoneBook.Controllers
 
             phoneBook.Id = Guid.NewGuid().ToString();
             await _cosmosDbService.AddItemAsync(phoneBook);
-            return Ok(phoneBook.Id);
+            return Ok(new { phoneBook.Id });
         }
 
         [HttpPut("{id}")]
