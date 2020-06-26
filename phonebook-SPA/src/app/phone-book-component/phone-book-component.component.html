@@ -1,0 +1,37 @@
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-primary mb-3" (click)="toggleAdd()" [disabled]="toggleAddPhonebook">Add</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of phonebooks; let i = index">
+                    <th scope="row">{{i+1}}</th>
+                    <td>{{item.name}}</td>
+                    <td>
+                        <button type="button" class="btn btn-success mr-1" 
+                          [disabled]="toggleAddPhonebook" (click)="onEdit(item)"><i class="fa fa-edit"></i></button>
+                        <button type="button" [disabled]="toggleAddPhonebook" class="btn btn-danger mr-1" ><i class="fa fa-trash"></i></button>
+                        <button type="button" class="btn btn-primary" ><i class="fa fa-eye"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <app-addphonebook *ngIf="toggleAddPhonebook" #addPhoneBook [phonebooks]="phonebooks" (toggleAddPhonebook)="onToggleAdd($event)"></app-addphonebook>
+      </div>
+    </div>
+</div>

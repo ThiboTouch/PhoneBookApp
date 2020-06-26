@@ -1,0 +1,27 @@
+<form [formGroup]="phoneBookForm" (ngSubmit)="onSubmit()">
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" formControlName="name" placeholder="Name">
+            <div *ngIf="phoneBookForm.get('name').invalid &&
+                    (phoneBookForm.get('name').dirty ||
+                    phoneBookForm.get('name').touched )">
+                <div class="text-danger" *ngIf="phoneBookForm.get('name').errors.required">
+                    Name is required
+                </div>
+                <div class="text-danger" *ngIf="phoneBookForm.get('name').errors.minlength">
+                    Name must be at least 2 characters
+                </div>
+                <div class="text-danger" *ngIf="phoneBookForm.get('name').errors.maxlength">
+                    Name can't be more than 128 characters
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <button type="submit" [disabled]="phoneBookForm.invalid" class="btn btn-success">Save</button>
+            <button type="button" class="btn btn-danger pull-right" (click)="onToggleAdd($event)">Cancel</button>
+        </div>
+    </div>
+</form>
