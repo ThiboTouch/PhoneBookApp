@@ -31,6 +31,8 @@ namespace PhoneBook
         {
             services.AddControllers().AddNewtonsoftJson();
 
+            services.AddCors();
+
             services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("CosmosDb")).GetAwaiter().GetResult());
         }
 
@@ -42,9 +44,9 @@ namespace PhoneBook
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
+
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthorization();
 

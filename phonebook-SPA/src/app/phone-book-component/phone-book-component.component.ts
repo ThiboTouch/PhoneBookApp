@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { PhoneBook } from '../_models/phonebook';
 import { AddphonebookComponent } from '../addphonebook/addphonebook.component';
-import { lookupService } from 'dns';
+import { PhoneBookRepoService } from '../_services/phone-book-repo.service';
 
 @Component({
   selector: 'app-phone-book-component',
@@ -16,7 +16,6 @@ import { lookupService } from 'dns';
   styleUrls: ['./phone-book-component.component.css'],
 })
 export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
-  phonebooks: PhoneBook[];
   phonebook: PhoneBook;
 
   toggleAddPhonebook = false;
@@ -28,47 +27,16 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
 
   private addPhoneBookComponent: AddphonebookComponent;
 
-  constructor() {}
+  constructor(private repo: PhoneBookRepoService) {
+    this.repo.getPhoneBooks();
+  }
 
-  ngOnInit(): void {
-    this.phonebooks = [
-      {
-        id: 'b51ef698-1b84-4b92-991e-a1599f218265',
-        name: 'Family',
-        entries: [
-          {
-            name: 'John',
-            phoneNumber: '27785254123',
-          },
-          {
-            name: 'George',
-            phoneNumber: '0785241236',
-          },
-          {
-            name: 'foo',
-            phoneNumber: '0781252144',
-          },
-        ],
-      },
-      {
-        id: 'b51ef698-1b84-4b92-991e-a1599f218265',
-        name: 'Friends',
-        entries: [
-          {
-            name: 'John',
-            phoneNumber: '27785254123',
-          },
-          {
-            name: 'George',
-            phoneNumber: '0785241236',
-          },
-          {
-            name: 'foo',
-            phoneNumber: '0781252144',
-          },
-        ],
-      },
-    ];
+  ngOnInit(): void {  }
+
+  get phonebooks(): PhoneBook[] {
+    if (this.repo.phoneBooks != null && this.repo.phoneBooks.length > 0) {
+      return this.repo.phoneBooks;
+    }
   }
 
   public ngAfterViewInit(): void {
