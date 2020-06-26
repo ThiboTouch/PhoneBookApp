@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { PhoneBook } from '../_models/phonebook';
 import { AddphonebookComponent } from '../addphonebook/addphonebook.component';
+import { lookupService } from 'dns';
 
 @Component({
   selector: 'app-phone-book-component',
@@ -17,7 +18,11 @@ import { AddphonebookComponent } from '../addphonebook/addphonebook.component';
 export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
   phonebooks: PhoneBook[];
   phonebook: PhoneBook;
+
   toggleAddPhonebook = false;
+  confirmDelete = false;
+  editMode = false;
+
   @ViewChildren('addPhoneBook')
   public addPhoneBooks: QueryList<AddphonebookComponent>;
 
@@ -71,9 +76,9 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
       (comps: QueryList<AddphonebookComponent>) => {
         if (comps.first !== undefined && comps.first !== null) {
           this.addPhoneBookComponent = comps.first;
-          if (this.phonebook) {
+          if (this.editMode) {
             this.addPhoneBookComponent.onEdit(this.phonebook);
-            this.phonebook = null;
+            this.editMode = false;
           }
         }
       }
@@ -82,6 +87,7 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
 
   onEdit(item) {
     this.toggleAdd();
+    this.editMode = true;
     this.phonebook = item;
   }
 
@@ -91,5 +97,18 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
 
   onToggleAdd(toggle) {
     this.toggleAddPhonebook = toggle;
+  }
+
+  onConfirmDelete(item) {
+    this.phonebook = item;
+    this.confirmDelete = true;
+  }
+
+  deletePhoneBook() {
+    const index = this.phonebooks.indexOf(this.phonebook);
+    if (index > -1) {
+      this.phonebooks.splice(index, 1);
+    }
+    this.confirmDelete = false;
   }
 }
