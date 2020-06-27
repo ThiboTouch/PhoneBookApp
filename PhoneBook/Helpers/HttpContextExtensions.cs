@@ -17,6 +17,8 @@ namespace PhoneBook.Helpers
             double count = await queryable.CountAsync();
             double totalAmountPages = Math.Ceiling(count / recordsPerPage);
             httpContext.Response.Headers.Add("totalAmountPages", totalAmountPages.ToString());
+            httpContext.Response.Headers.Add("totalItems", count.ToString());
+            httpContext.Response.Headers.Add("Access-Control-Expose-Headers", "totalItems, totalAmountPages");
         }
     }
 }

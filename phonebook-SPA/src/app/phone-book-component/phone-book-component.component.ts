@@ -1,42 +1,48 @@
 import {
   Component,
   OnInit,
-  ViewChild,
   ViewChildren,
   AfterViewInit,
   QueryList,
+  ChangeDetectorRef
 } from '@angular/core';
 import { PhoneBook } from '../_models/phonebook';
 import { AddphonebookComponent } from '../addphonebook/addphonebook.component';
 import { PhoneBookRepoService } from '../_services/phone-book-repo.service';
+import { Pagination, PaginatedResult } from '../_models/pagination';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-phone-book-component',
-  templateUrl: './phone-book-component.component.html',
-  styleUrls: ['./phone-book-component.component.css'],
+  selector: "app-phone-book-component",
+  templateUrl: "./phone-book-component.component.html",
+  styleUrls: ["./phone-book-component.component.css"],
 })
 export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
   phonebook: PhoneBook;
+  phonebooks: PhoneBook[];
+  pagination: Pagination;
 
   toggleAddPhonebook = false;
   confirmDelete = false;
   editMode = false;
+  newItemAdded = false;
 
-  @ViewChildren('addPhoneBook')
+  @ViewChildren("addPhoneBook")
   public addPhoneBooks: QueryList<AddphonebookComponent>;
 
   private addPhoneBookComponent: AddphonebookComponent;
 
-  constructor(private repo: PhoneBookRepoService) {
-    this.repo.getPhoneBooks();
-  }
+  constructor(
+    private repo: PhoneBookRepoService,
+    private route: ActivatedRoute,
+    private ref: ChangeDetectorRef
+  ) {}
 
-  ngOnInit(): void {  }
-
-  get phonebooks(): PhoneBook[] {
-    if (this.repo.phoneBooks != null && this.repo.phoneBooks.length > 0) {
-      return this.repo.phoneBooks;
-    }
+  ngOnInit(): void {
+    this.route.data.subscribe((data) => {
+      this.phonebooks = data["phonebooks"].result;
+      this.pagination = data["phonebooks"].pagination;
+    });
   }
 
   public ngAfterViewInit(): void {
@@ -51,6 +57,30 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
         }
       }
     );
+  }
+
+  pageChanged(event: any): void {
+    this.pagination.page = event.page;
+    this.loadPhoneBooks();
+  }
+
+  loadPhoneBooks() {
+    this.repo
+      .getPhoneBooks(this.pagination.recordsPerPage, this.pagination.page)
+      .subscribe(
+        (res: PaginatedResult<PhoneBook[]>) => {
+          this.phonebooks = res.result;
+          this.pagination = res.pagination;
+          if (this.newItemAdded) {
+            this.pagination.page = res.pagination.totalAmountPages;
+            this.ref.detectChanges();
+            this.newItemAdded = false;
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   onEdit(item) {
@@ -72,15 +102,20 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
     this.confirmDelete = true;
   }
 
+  onAddedNewPhoneBook(event) {
+    this.newItemAdded = true;
+    this.loadPhoneBooks();
+  }
+
   deletePhoneBook() {
-    this.repo.deletePhoneBook(this.phonebook.id).subscribe(next => {
-      const index = this.phonebooks.indexOf(this.phonebook);
-      if (index > -1) {
-        this.phonebooks.splice(index, 1);
+    this.repo.deletePhoneBook(this.phonebook.id).subscribe(
+      (next) => {
+        this.loadPhoneBooks();
+        this.confirmDelete = false;
+      },
+      (error) => {
+        console.log(error);
       }
-      this.confirmDelete = false;
-    }, error => {
-      console.log(error);
-    });
+    );
   }
 }

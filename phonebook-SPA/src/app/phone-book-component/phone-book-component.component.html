@@ -10,14 +10,12 @@
             <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
                     <th scope="col">Name</th>
                     <th scope="col">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let item of phonebooks; let i = index">
-                    <th scope="row">{{i+1}}</th>
                     <td>{{item.name}}</td>
                     <td>
                         <button type="button" class="btn btn-success mr-1" 
@@ -38,8 +36,14 @@
           <button type="button" class="btn btn-danger btn-sm m-1 float-right" (click)="deletePhoneBook()">Yes</button>
         </span>
       </div>
+      <div class="d-flex justify-content-center">
+        <pagination [boundaryLinks]="true" [(ngModel)]="pagination.page" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.recordsPerPage"
+         (pageChanged)="pageChanged($event)" previousText="&lsaquo;" nextText="&rsaquo;"
+          firstText="&laquo;" lastText="&raquo;">
+        </pagination>
+      </div>
       <div class="col-md-12">
-        <app-addphonebook *ngIf="toggleAddPhonebook" #addPhoneBook [phonebooks]="phonebooks" (toggleAddPhonebook)="onToggleAdd($event)"></app-addphonebook>
+        <app-addphonebook *ngIf="toggleAddPhonebook" #addPhoneBook (addedNewPhoneBook)="onAddedNewPhoneBook($event)"  [pagination]="pagination" [phonebooks]="phonebooks" (toggleAddPhonebook)="onToggleAdd($event)"></app-addphonebook>
       </div>
     </div>
 </div>
