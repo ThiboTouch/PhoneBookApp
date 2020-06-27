@@ -10,7 +10,7 @@ import { PhoneBook } from '../_models/phonebook';
 import { AddphonebookComponent } from '../addphonebook/addphonebook.component';
 import { PhoneBookRepoService } from '../_services/phone-book-repo.service';
 import { Pagination, PaginatedResult } from '../_models/pagination';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertifyService } from '../_services/alertify.service';
 
 @Component({
@@ -38,7 +38,8 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
     private repo: PhoneBookRepoService,
     private route: ActivatedRoute,
     private alertify: AlertifyService,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -116,6 +117,10 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
   onAddedNewPhoneBook(event) {
     this.newItemAdded = true;
     this.loadPhoneBooks();
+  }
+
+  onView(item) {
+    this.router.navigate(['/entries/' + item.id]);
   }
 
   deletePhoneBook() {
