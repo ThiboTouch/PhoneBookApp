@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PhoneBookEntriesComponent } from './phone-book-entries/phone-book-entries.component';
 import { PhoneBooksResolver } from './_resolvers/phone-book.resolver';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { ErrorInterceptorProvider } from './_services/error.interceptor';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
   ],
   providers: [
     PhoneBookRepoService,
-    PhoneBooksResolver
+    PhoneBooksResolver,
+    ErrorInterceptorProvider
   ],
   bootstrap: [AppComponent]
 })

@@ -11,11 +11,12 @@ import { AddphonebookComponent } from '../addphonebook/addphonebook.component';
 import { PhoneBookRepoService } from '../_services/phone-book-repo.service';
 import { Pagination, PaginatedResult } from '../_models/pagination';
 import { ActivatedRoute } from '@angular/router';
+import { AlertifyService } from '../_services/alertify.service';
 
 @Component({
-  selector: "app-phone-book-component",
-  templateUrl: "./phone-book-component.component.html",
-  styleUrls: ["./phone-book-component.component.css"],
+  selector: 'app-phone-book-component',
+  templateUrl: './phone-book-component.component.html',
+  styleUrls: ['./phone-book-component.component.css'],
 })
 export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
   phonebook: PhoneBook;
@@ -28,7 +29,7 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
   newItemAdded = false;
   itemDeleted = false;
 
-  @ViewChildren("addPhoneBook")
+  @ViewChildren('addPhoneBook')
   public addPhoneBooks: QueryList<AddphonebookComponent>;
 
   private addPhoneBookComponent: AddphonebookComponent;
@@ -36,13 +37,14 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
   constructor(
     private repo: PhoneBookRepoService,
     private route: ActivatedRoute,
+    private alertify: AlertifyService,
     private ref: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.route.data.subscribe((data) => {
-      this.phonebooks = data["phonebooks"].result;
-      this.pagination = data["phonebooks"].pagination;
+      this.phonebooks = data['phonebooks'].result;
+      this.pagination = data['phonebooks'].pagination;
     });
   }
 
@@ -87,7 +89,7 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
           }
         },
         (error) => {
-          console.log(error);
+          this.alertify.error(error);
         }
       );
   }
@@ -122,9 +124,10 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
         this.confirmDelete = false;
         this.itemDeleted = true;
         this.loadPhoneBooks();
+        this.alertify.success('item was successfully deleted');
       },
       (error) => {
-        console.log(error);
+        this.alertify.error(error);
       }
     );
   }

@@ -3,6 +3,7 @@ import { PhoneBook } from '../_models/phonebook';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PhoneBookRepoService } from '../_services/phone-book-repo.service';
 import { Pagination } from '../_models/pagination';
+import { AlertifyService } from '../_services/alertify.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +26,7 @@ export class AddphonebookComponent implements OnInit {
     ]),
   });
 
-  constructor(private repo: PhoneBookRepoService) {
+  constructor(private repo: PhoneBookRepoService, private alertify: AlertifyService) {
     this.toggleAddPhonebook = new EventEmitter<boolean>();
     this.addedNewPhoneBook = new EventEmitter<PhoneBook>();
   }
@@ -56,8 +57,9 @@ export class AddphonebookComponent implements OnInit {
       this.repo.addPhoneBook(this.phonebook).subscribe(res => {
         const evenData = this.phonebook;
         this.addedNewPhoneBook.emit(evenData);
+        this.alertify.success('item was successfully added');
       }, error => {
-        console.log(error);
+        this.alertify.error(error);
       });
 
       this.phonebook = null;
@@ -70,8 +72,9 @@ export class AddphonebookComponent implements OnInit {
         if (index !== -1) {
           this.phonebooks[index] = this.phonebook;
         }
+        this.alertify.success('item was successfully updated');
       }, error => {
-        console.log(error);
+        this.alertify.error(error);
       });
     }
   }
