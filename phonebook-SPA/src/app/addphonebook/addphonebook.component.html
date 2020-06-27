@@ -1,7 +1,7 @@
 <form [formGroup]="phoneBookForm" (ngSubmit)="onSubmit()">
     <div class="form-group row">
         <div class="col-sm-10">
-            <label for="name">Name</label>
+            <label for="name">Phone Book Name</label>
             <input type="text" class="form-control" id="name" name="name" formControlName="name" placeholder="Name">
             <div *ngIf="phoneBookForm.get('name').invalid &&
                     (phoneBookForm.get('name').dirty ||

@@ -26,6 +26,7 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
   confirmDelete = false;
   editMode = false;
   newItemAdded = false;
+  itemDeleted = false;
 
   @ViewChildren("addPhoneBook")
   public addPhoneBooks: QueryList<AddphonebookComponent>;
@@ -76,6 +77,14 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
             this.ref.detectChanges();
             this.newItemAdded = false;
           }
+          if (this.itemDeleted) {
+            if (this.phonebooks.length <= 0) {
+              this.pagination.page = this.pagination.page - 1;
+              this.pageChanged(this.pagination);
+              this.ref.detectChanges();
+            }
+            this.itemDeleted = false;
+          }
         },
         (error) => {
           console.log(error);
@@ -110,8 +119,9 @@ export class PhoneBookComponentComponent implements OnInit, AfterViewInit {
   deletePhoneBook() {
     this.repo.deletePhoneBook(this.phonebook.id).subscribe(
       (next) => {
-        this.loadPhoneBooks();
         this.confirmDelete = false;
+        this.itemDeleted = true;
+        this.loadPhoneBooks();
       },
       (error) => {
         console.log(error);

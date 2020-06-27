@@ -5,7 +5,7 @@
               [disabled]="toggleAddPhonebook || confirmDelete">Add</button>
         </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="phonebooks?.length > 0; else nodata">
         <div class="col-md-12">
             <table class="table">
                 <thead>
@@ -26,8 +26,17 @@
                   </tr>
                 </tbody>
               </table>
+            <div class="d-flex justify-content-center">
+              <pagination [boundaryLinks]="true" [(ngModel)]="pagination.page" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.recordsPerPage"
+              (pageChanged)="pageChanged($event)" previousText="&lsaquo;" nextText="&rsaquo;"
+                firstText="&laquo;" lastText="&raquo;">
+              </pagination>
+            </div>
         </div>
     </div>
+    <ng-template #nodata>
+      <h4 class="mb-5">No data recieved...</h4>
+    </ng-template>
     <div class="row">
       <div class="col-md-12">
         <span *ngIf="confirmDelete" class="m-1 block">
@@ -35,12 +44,6 @@
           <button type="button" class="btn btn-primary btn-sm m-1 float-right" (click)="confirmDelete=false">No</button>
           <button type="button" class="btn btn-danger btn-sm m-1 float-right" (click)="deletePhoneBook()">Yes</button>
         </span>
-      </div>
-      <div class="d-flex justify-content-center">
-        <pagination [boundaryLinks]="true" [(ngModel)]="pagination.page" [totalItems]="pagination.totalItems" [itemsPerPage]="pagination.recordsPerPage"
-         (pageChanged)="pageChanged($event)" previousText="&lsaquo;" nextText="&rsaquo;"
-          firstText="&laquo;" lastText="&raquo;">
-        </pagination>
       </div>
       <div class="col-md-12">
         <app-addphonebook *ngIf="toggleAddPhonebook" #addPhoneBook (addedNewPhoneBook)="onAddedNewPhoneBook($event)"  [pagination]="pagination" [phonebooks]="phonebooks" (toggleAddPhonebook)="onToggleAdd($event)"></app-addphonebook>
