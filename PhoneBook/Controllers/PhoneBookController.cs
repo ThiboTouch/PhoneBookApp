@@ -93,8 +93,10 @@ namespace PhoneBook.Controllers
             PhoneBookModel pb = await _cosmosDbService.GetItemAsync(id);
             if (pb != null)
             {
-                if (!pb.Entries.Any(e => e.PhoneNumber == entry.PhoneNumber))
+                if (pb.Entries == null || !pb.Entries.Any(e => e.PhoneNumber == entry.PhoneNumber))
                 {
+                    if (pb.Entries == null)
+                        pb.Entries = new List<PhoneBookEntry>();
                     pb.Entries.Add(entry);
                     await _cosmosDbService.UpdateItemAsync(id, pb);
                     return Ok(pb.Entries);

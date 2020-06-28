@@ -34,9 +34,9 @@ export class AddphonebookComponent implements OnInit {
   ngOnInit(): void {}
 
   onToggleAdd(event) {
-    this.toggleAddPhonebook.emit(false);
     this.phoneBookForm.reset();
     this.phonebook = null;
+    this.toggleAddPhonebook.emit(false);
   }
 
   onEdit(item) {

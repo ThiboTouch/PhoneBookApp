@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs/internal/Observable';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
+import { PhoneBookEntry } from '../_models/phonebookentry';
 
 const  baseUrl = environment.apiUrl;
 
@@ -58,5 +59,13 @@ export class PhoneBookRepoService {
 
   deletePhoneBook(id: string) {
     return this.http.delete(baseUrl + `/${id}`);
+  }
+
+  addPhoneBookEntry(id: string, phoneBookEntry: PhoneBookEntry): Observable<PhoneBookEntry[]> {
+    return this.http.post<PhoneBookEntry[]>(`${baseUrl}/entries/${id}`, phoneBookEntry);
+  }
+
+  deletePhoneBookEntry(id: string, phoneNumber: string) {
+    return this.http.delete(`${baseUrl}/entries/${id}/${phoneNumber}`);
   }
 }

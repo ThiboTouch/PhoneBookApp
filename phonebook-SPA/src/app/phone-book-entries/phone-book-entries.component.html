@@ -1,7 +1,7 @@
 <div class="container mt-3">
     <div class="row">
         <div class="col-md-12">
-            <button type="button" class="btn btn-primary mb-3">Add</button>
+            <button type="button" class="btn btn-primary mb-3" (click)="toggleAdd()" [disabled]="toggleAddEntry || confirmDelete">Add</button>
             <a [routerLink]="['/phonebooks']" class="btn btn-danger mb-3 ml-3">Cancel</a>
         </div>
     </div>
@@ -10,15 +10,43 @@
             <h1>{{phonebook.name}}</h1>
         </div>
     </div>
-    <div class="row" *ngIf="phonebook.entries?.length > 0; else nodata">
+    <div class="row">
         <div class="col-md-12">
+            <input type="text" class="form-control" placeholder="Type to filter the name column..." (keyup)="updateFilter($event)" />
+            <ngx-datatable class="bootstrap" #phoneNumbersTable [rows]="phonebook.entries" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+                [rowHeight]="50" [sorts]="[{prop: 'name', dir: 'asc'}]">
 
-            <table class="table">
-            </table>
+                <ngx-datatable-column name="Name">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row.name}}
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Phone Number" prop="phonenumber">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row.phonenumber}}
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column [sortable]="false" name="Actions">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button type="button" [disabled]="toggleAddEntry || confirmDelete" class="btn btn-success mr-1"><i class="fa fa-edit"></i></button>
+                        <button type="button" [disabled]="toggleAddEntry" (click)="onConfirmDelete(row)" class="btn btn-danger mr-1"><i class="fa fa-trash"></i></button>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
         </div>
     </div>
-
-    <ng-template #nodata>
-        <h4 class="mb-5">No data recieved...</h4>
-    </ng-template>
+    <div class="row">
+        <div class="col-md-12 mt-3">
+            <span *ngIf="confirmDelete" class="m-1 block">
+              <span>Are you sure you want to delete {{phoneBookEntry.name}} ({{phoneBookEntry.phoneNumber}})?</span>
+              <button type="button" class="btn btn-primary btn-sm m-1 float-right" (click)="confirmDelete=false">No</button>
+              <button type="button" class="btn btn-danger btn-sm m-1 float-right" (click)="deletePhoneBookEntry()">Yes</button>
+            </span>
+          </div>
+        <div class="col-md-12">
+            <app-add-phone-book-entry *ngIf="toggleAddEntry" [phoneBook]="this.phonebook" (toggleAddPhonebookEntry)="onToggleAdd($event)"></app-add-phone-book-entry>
+        </div>
+    </div>
 </div>

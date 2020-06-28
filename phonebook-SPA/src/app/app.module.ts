@@ -13,6 +13,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
 import { HomeComponent } from './home/home.component';
 import { PhoneBookViewResolver } from './_resolvers/phone-book-view.resolver';
+import { NgxDatatableModule  } from '@swimlane/ngx-datatable';
+import { AddPhoneBookEntryComponent } from './add-phone-book-entry/add-phone-book-entry.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import { PhoneBookViewResolver } from './_resolvers/phone-book-view.resolver';
     PhoneBookComponentComponent,
     AddphonebookComponent,
     PhoneBookEntriesComponent,
-    HomeComponent
+    HomeComponent,
+    AddPhoneBookEntryComponent
   ],
   imports: [
     BrowserModule,
@@ -28,6 +31,7 @@ import { PhoneBookViewResolver } from './_resolvers/phone-book-view.resolver';
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
+    NgxDatatableModule,
     PaginationModule.forRoot()
   ],
   providers: [
