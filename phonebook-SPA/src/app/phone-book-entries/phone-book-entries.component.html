@@ -30,7 +30,7 @@
 
                 <ngx-datatable-column [sortable]="false" name="Actions">
                     <ng-template let-row="row" ngx-datatable-cell-template>
-                        <button type="button" [disabled]="toggleAddEntry || confirmDelete" class="btn btn-success mr-1"><i class="fa fa-edit"></i></button>
+                        <button type="button" [disabled]="toggleAddEntry || confirmDelete" (click)="onEdit(row)" class="btn btn-success mr-1"><i class="fa fa-edit"></i></button>
                         <button type="button" [disabled]="toggleAddEntry" (click)="onConfirmDelete(row)" class="btn btn-danger mr-1"><i class="fa fa-trash"></i></button>
                     </ng-template>
                 </ngx-datatable-column>
@@ -46,7 +46,7 @@
             </span>
           </div>
         <div class="col-md-12">
-            <app-add-phone-book-entry *ngIf="toggleAddEntry" [phoneBook]="this.phonebook" (toggleAddPhonebookEntry)="onToggleAdd($event)"></app-add-phone-book-entry>
+            <app-add-phone-book-entry *ngIf="toggleAddEntry" #addPhoneBookEntry [phoneBook]="this.phonebook" (toggleAddPhonebookEntry)="onToggleAdd($event)"></app-add-phone-book-entry>
         </div>
     </div>
 </div>

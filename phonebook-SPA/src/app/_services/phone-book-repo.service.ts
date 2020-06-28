@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
 import { PhoneBookEntry } from '../_models/phonebookentry';
+import { PatchRequest } from '../_models/patchrequest';
 
 const  baseUrl = environment.apiUrl;
 
@@ -67,5 +68,20 @@ export class PhoneBookRepoService {
 
   deletePhoneBookEntry(id: string, phoneNumber: string) {
     return this.http.delete(`${baseUrl}/entries/${id}/${phoneNumber}`);
+  }
+
+  patchPhoneBookEntry(id: string, phoneNumber: string, phoneBookEntry: PhoneBookEntry): Observable<PhoneBookEntry[]> {
+    const request = new PatchRequest();
+    request.Request = [{
+      op: 'replace',
+      path: 'phonenumber',
+      value: phoneBookEntry.phoneNumber
+    },
+    {
+      op: 'replace',
+      path: 'name',
+      value: phoneBookEntry.name
+    }];
+    return this.http.patch<PhoneBookEntry[]>(`${baseUrl}/entries/${id}/${phoneNumber}`, request.Request);
   }
 }

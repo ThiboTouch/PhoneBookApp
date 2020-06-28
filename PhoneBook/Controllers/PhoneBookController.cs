@@ -137,7 +137,7 @@ namespace PhoneBook.Controllers
                 var entry = pb.Entries.FirstOrDefault(e => e.PhoneNumber == phoneNumber);
                 patchDocument.ApplyTo(entry);
                 await _cosmosDbService.UpdateItemAsync(id, pb);
-                return Ok();
+                return Ok(pb.Entries);
             }
             return NotFound("No phone book found.");
         }

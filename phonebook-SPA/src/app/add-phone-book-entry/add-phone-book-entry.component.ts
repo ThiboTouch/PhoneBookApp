@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { validPhoneNumberValidator } from '../shared/validphoneNumber';
 import { PhoneBookEntry } from '../_models/phonebookentry';
@@ -7,6 +7,7 @@ import { PhoneBook } from '../_models/phonebook';
 import { AlertifyService } from '../_services/alertify.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-add-phone-book-entry',
   templateUrl: './add-phone-book-entry.component.html',
   styleUrls: ['./add-phone-book-entry.component.css']
@@ -16,6 +17,7 @@ export class AddPhoneBookEntryComponent implements OnInit {
   @Input() phoneBook: PhoneBook;
 
   phoneBookEntry: PhoneBookEntry;
+  tempEntry: PhoneBookEntry;
 
   public phoneBookEntryForm: FormGroup;
 
@@ -48,6 +50,14 @@ export class AddPhoneBookEntryComponent implements OnInit {
     this.toggleAddPhonebookEntry.emit(false);
   }
 
+  onEdit(item) {
+    this.phoneBookEntry = {name: item.name, phoneNumber: item.phoneNumber};
+    this.phoneBookEntryForm.patchValue({
+      name: this.phoneBookEntry.name,
+      phoneNumber: this.phoneBookEntry.phoneNumber
+    });
+  }
+
   onSubmit() {
     if (!this.phoneBookEntry) {
       this.phoneBookEntry = {
@@ -64,6 +74,17 @@ export class AddPhoneBookEntryComponent implements OnInit {
 
       this.phoneBookEntry = null;
       this.phoneBookEntryForm.reset();
+    } else {
+      this.tempEntry = Object.assign({}, this.phoneBookEntry);
+      this.phoneBookEntry.name = this.phoneBookEntryForm.get('name').value;
+      this.phoneBookEntry.phoneNumber = this.phoneBookEntryForm.get('phoneNumber').value;
+      this.repo.patchPhoneBookEntry(this.phoneBook.id, this.tempEntry.phoneNumber, this.phoneBookEntry).subscribe(res => {
+        this.phoneBook.entries = res;
+        this.tempEntry = null;
+        this.alertify.success('item was successfully updated');
+      }, error => {
+        this.alertify.error(error);
+      });
     }
   }
 }
