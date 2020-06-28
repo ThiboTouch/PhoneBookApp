@@ -1,6 +1,6 @@
 # Phone Book App
 ##### Development Setup:
-1. Ensure you have Azure Cosmos DB emulator running on https://localhost:8081/. Download and install the emulator: https://aka.ms/cosmosdb-emulator
+1. Ensure you have Azure Cosmos DB emulator running on https://localhost:8081/. Download and install the emulator: https://aka.ms/cosmosdb-emulator. Instructions: https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator
 2. open up cmd/powershell and set the working directory as PhoneBook (Server) folder of the solution
 3. Run the following command to start the server app:
     ___
