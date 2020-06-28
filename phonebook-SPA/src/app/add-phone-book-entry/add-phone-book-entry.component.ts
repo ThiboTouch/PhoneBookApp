@@ -14,6 +14,7 @@ import { AlertifyService } from '../_services/alertify.service';
 })
 export class AddPhoneBookEntryComponent implements OnInit {
   @Output() private toggleAddPhonebookEntry: EventEmitter<boolean>;
+  @Output() private collectionChanged: EventEmitter<PhoneBookEntry[]>;
   @Input() phoneBook: PhoneBook;
 
   phoneBookEntry: PhoneBookEntry;
@@ -23,6 +24,7 @@ export class AddPhoneBookEntryComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private repo: PhoneBookRepoService, private alertify: AlertifyService) {
     this.toggleAddPhonebookEntry = new EventEmitter<boolean>();
+    this.collectionChanged = new EventEmitter<PhoneBookEntry[]>();
     this.createForm();
   }
 
@@ -68,6 +70,7 @@ export class AddPhoneBookEntryComponent implements OnInit {
       this.repo.addPhoneBookEntry(this.phoneBook.id, this.phoneBookEntry).subscribe(res => {
         this.phoneBook.entries = res;
         this.alertify.success('item was successfully added');
+        this.collectionChanged.emit(res);
       }, error => {
         this.alertify.error(error);
       });
@@ -82,6 +85,7 @@ export class AddPhoneBookEntryComponent implements OnInit {
         this.phoneBook.entries = res;
         this.tempEntry = null;
         this.alertify.success('item was successfully updated');
+        this.collectionChanged.emit(res);
       }, error => {
         this.alertify.error(error);
       });

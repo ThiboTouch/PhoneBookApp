@@ -46,7 +46,7 @@
             </span>
           </div>
         <div class="col-md-12">
-            <app-add-phone-book-entry *ngIf="toggleAddEntry" #addPhoneBookEntry [phoneBook]="this.phonebook" (toggleAddPhonebookEntry)="onToggleAdd($event)"></app-add-phone-book-entry>
+            <app-add-phone-book-entry *ngIf="toggleAddEntry" #addPhoneBookEntry (collectionChanged)="onEntryCollectionChanged($event)" [phoneBook]="this.phonebook" (toggleAddPhonebookEntry)="onToggleAdd($event)"></app-add-phone-book-entry>
         </div>
     </div>
 </div>

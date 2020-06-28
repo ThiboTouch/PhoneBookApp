@@ -91,11 +91,16 @@ export class PhoneBookEntriesComponent implements OnInit, AfterViewInit {
       .subscribe(
         (res: PhoneBook) => {
           this.phonebook = res;
+          this.temp = res.entries;
         },
         (error) => {
           this.alertify.error(error);
         }
       );
+  }
+
+  onEntryCollectionChanged(event) {
+    this.temp = event;
   }
 
   deletePhoneBookEntry() {
