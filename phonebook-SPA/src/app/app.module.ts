@@ -11,13 +11,16 @@ import { PhoneBookEntriesComponent } from './phone-book-entries/phone-book-entri
 import { PhoneBooksResolver } from './_resolvers/phone-book.resolver';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
+import { HomeComponent } from './home/home.component';
+import { PhoneBookViewResolver } from './_resolvers/phone-book-view.resolver';
 
 @NgModule({
   declarations: [
     AppComponent,
     PhoneBookComponentComponent,
     AddphonebookComponent,
-    PhoneBookEntriesComponent
+    PhoneBookEntriesComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -30,6 +33,7 @@ import { ErrorInterceptorProvider } from './_services/error.interceptor';
   providers: [
     PhoneBookRepoService,
     PhoneBooksResolver,
+    PhoneBookViewResolver,
     ErrorInterceptorProvider
   ],
   bootstrap: [AppComponent]

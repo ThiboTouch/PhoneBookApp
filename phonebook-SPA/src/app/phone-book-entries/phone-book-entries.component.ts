@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { PhoneBook } from '../_models/phonebook';
+import { PhoneBookRepoService } from '../_services/phone-book-repo.service';
+import { AlertifyService } from '../_services/alertify.service';
 
 @Component({
   selector: 'app-phone-book-entries',
@@ -7,9 +10,13 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./phone-book-entries.component.css']
 })
 export class PhoneBookEntriesComponent implements OnInit {
+  phoneBook: PhoneBook;
+  id: string;
 
-  constructor(private route: ActivatedRoute) {
-    console.log(route.snapshot.params['id']);
+  constructor(private route: ActivatedRoute, private repo: PhoneBookRepoService, private alertify: AlertifyService) {
+    this.route.data.subscribe(data => {
+      this.phoneBook = data['phonebook'];
+    });
   }
 
   ngOnInit(): void {

@@ -52,6 +52,10 @@ export class PhoneBookRepoService {
     return this.http.put(baseUrl + `/${id}`, model);
   }
 
+  getPhoneBook(id): Observable<PhoneBook> {
+    return this.http.get<PhoneBook>(baseUrl + `/${id}`);
+  }
+
   deletePhoneBook(id: string) {
     return this.http.delete(baseUrl + `/${id}`);
   }
