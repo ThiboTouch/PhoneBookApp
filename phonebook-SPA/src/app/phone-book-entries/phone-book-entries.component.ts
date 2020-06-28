@@ -10,12 +10,12 @@ import { AlertifyService } from '../_services/alertify.service';
   styleUrls: ['./phone-book-entries.component.css']
 })
 export class PhoneBookEntriesComponent implements OnInit {
-  phoneBook: PhoneBook;
+  phonebook: PhoneBook;
   id: string;
 
   constructor(private route: ActivatedRoute, private repo: PhoneBookRepoService, private alertify: AlertifyService) {
     this.route.data.subscribe(data => {
-      this.phoneBook = data['phonebook'];
+      this.phonebook = data['phonebook'];
     });
   }
 
